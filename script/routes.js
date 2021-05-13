@@ -3,6 +3,7 @@ const {
     getAllBooksAPI,
     getBookDetailAPI,
     editBookAPI,
+    deleteBookAPI,
 } = require('./booksController');
 
 const routes = [
@@ -29,11 +30,17 @@ const routes = [
     path: '/books/{id}',
     handler: getBookDetailAPI,
   },
-  //get book detail
+  //edit book
   {
     method: 'PUT',
     path: '/books/{id}',
     handler: editBookAPI,
+  },
+  //delete Book
+  {
+    method: 'DELETE',
+    path: '/books/{id}',
+    handler: deleteBookAPI,
   },
 ];
 

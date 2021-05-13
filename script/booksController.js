@@ -43,7 +43,6 @@ const addBookAPI = (request, h) => {
   };
 
   books.push(newBook);
-  console.log(newBook);
 
   const isSuccess = books.filter((book) => book.id === id).length > 0;
 
@@ -111,9 +110,21 @@ const editBookAPI = (request, h) => {
     readPage,
     reading,
   } = JSON.parse(request.payload);
+  
   const updatedAt = new Date().toISOString();
  
   const index = books.findIndex((book) => book.id === id);
+
+  //console.log(index.readPage);
+  // if (readPage > pageCount) {
+    
+  //   const response = h.response({
+  //     status: 'fail',
+  //     message: "Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount",
+  //   });
+  //   response.code(400);
+  //   return response;
+  // }
  
   if (index !== -1) {
     books[index] = {
@@ -143,10 +154,35 @@ const editBookAPI = (request, h) => {
   response.code(404);
   return response;
 };
+
+//delete book
+const deleteBookAPI = (request, h) => {
+  const { id } = request.params;
+ 
+  const index = books.findIndex((book) => book.id === id);
+ 
+  if (index !== -1) {
+    books.splice(index, 1);
+    const response = h.response({
+      status: 'success',
+      message: 'Buku berhasil dihapus',
+    });
+    response.code(200);
+    return response;
+  }
+ 
+ const response = h.response({
+    status: 'fail',
+    message: 'Buku gagal dihapus. Id tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
  
 module.exports = {
   addBookAPI,
   getAllBooksAPI,
   getBookDetailAPI,
   editBookAPI,
+  deleteBookAPI,
 };
