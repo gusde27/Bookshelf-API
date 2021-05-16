@@ -1,6 +1,7 @@
 const books = require("./books");
 const { nanoid } = require('nanoid');
 
+// ====================== SAVE BOOK ===========================
 //this method for save the book
 const addBookAPI = (request, h) => {
   
@@ -19,8 +20,8 @@ const addBookAPI = (request, h) => {
   const insertedAt = new Date().toISOString(); //for date
   const updatedAt = insertedAt; //for date
   
+  //this condition for boolean of page
   let finished = Boolean;
-
   if (pageCount === readPage) {
     finished = true;
   } else {
@@ -42,7 +43,27 @@ const addBookAPI = (request, h) => {
     updatedAt,
   };
 
-  books.push(newBook);
+  //this condition for rule of page
+  if (readPage > pageCount) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
+    });
+    response.code(400);
+    return response;
+  }
+
+  // this condition for check name = undefined
+  if (newBook.name === undefined) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. Mohon isi nama buku',
+    });
+    response.code(400);
+    return response;
+  }
+
+  books.push(newBook); //add book
 
   const isSuccess = books.filter((book) => book.id === id).length > 0;
 
@@ -66,6 +87,7 @@ const addBookAPI = (request, h) => {
   response.code(500);
   return response;
 };
+// ===================== END SAVE BOOK ======================
 
 //Get all books
 const getAllBooksAPI = () => ({
